@@ -36,7 +36,7 @@ unsigned int syncIndex2 = 0;  // index of the second sync signal
 bool received = false;
 
 // detect if a sync signal is present
-bool isSync(unsigned int idx)
+ICACHE_RAM_ATTR bool isSync(unsigned int idx)
 {
   unsigned long t0 = timings[(idx+RING_BUFFER_SIZE-1) % RING_BUFFER_SIZE];
   unsigned long t1 = timings[idx];
