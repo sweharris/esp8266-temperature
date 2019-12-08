@@ -27,7 +27,7 @@ The 433Mhz receiver is connected simply:
 
 If you change the DATA pin then you'll need to change the definition of
 
-  #define DATAPIN  D2
+    #define DATAPIN  D2
 
 This is attached to an interrupt.
 
