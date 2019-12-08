@@ -9,7 +9,7 @@
 #include <PubSubClient.h>
 #include "network_conn.h"
 
-#define _mqttBase    "test-therm"
+#define _mqttBase    "temp"
 
 // For MQTT
 WiFiClient espClient;
@@ -113,6 +113,8 @@ void setup()
   unsigned char mac[6];
   WiFi.macAddress(mac);
   sprintf(macstr, "%02X%02X%02X", mac[3], mac[4], mac[5]);
+
+  sprintf(mqttChannel,      "%s/%s/status",      _mqttBase, macstr);
 
   Serial.begin(115200);
   delay(500);
@@ -254,7 +256,7 @@ void loop()
         String tm = ctime(&now);
         tm.trim();
         String json="{\"date\":\"" + tm + " GMT\", \"degF\": \"" + fstr + "\", \"degC\": \"" + cstr + "\"}";
-        client.publish(_mqttBase,json.c_str(),true);
+        client.publish(mqttChannel,json.c_str(),true);
       }
       else
       {
