@@ -48,6 +48,6 @@ he replied:
 >> There is no software license on this code, but I certainly appreciate if you can include a link to this post when you publish your code.
 
 In that spirit I have placed an "unlicense" license on this repo.  If you
-re-use this anyway, please include a link to Ray's original post.
+re-use this in anyway, please include a link to Ray's original post.
 
 Ported to ESP8266 by Stephen Harris, Dec 2019
