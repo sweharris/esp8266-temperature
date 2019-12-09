@@ -42,6 +42,12 @@ eg
 
 Uses PubSubClient library on top of the ESP8266WiFi one
    
-Original code by Ray Wang, April 2014
+Original code by Ray Wang, April 2014.  I asked him about licensing and
+he replied:
+
+>> There is no software license on this code, but I certainly appreciate if you can include a link to this post when you publish your code.
+
+In that spirit I have placed an "unlicense" license on this repo.  If you
+re-use this anyway, please include a link to Ray's original post.
 
 Ported to ESP8266 by Stephen Harris, Dec 2019
