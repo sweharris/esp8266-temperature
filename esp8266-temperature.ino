@@ -16,6 +16,7 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 
 char mqttChannel[30];  // Enough for Base + "/" + 6 hex digits + "/" + channel
+char mqttDebug[30];
 char macstr[7];        // To hold part of the MAC address
 
 // ring buffer size has to be large enough to fit
@@ -106,6 +107,16 @@ ICACHE_RAM_ATTR void handler()
   }
 }
 
+// Only makes sense to call this after the WiFi has connected and time determined.
+void log_msg(String msg)
+{ 
+  time_t now = time(nullptr);
+  String tm = ctime(&now);
+  tm.trim();
+  tm = tm + ": " + msg;
+  Serial.println(tm);
+  client.publish(mqttDebug, tm.c_str());
+}
 
 void setup()
 {
@@ -114,7 +125,8 @@ void setup()
   WiFi.macAddress(mac);
   sprintf(macstr, "%02X%02X%02X", mac[3], mac[4], mac[5]);
 
-  sprintf(mqttChannel,      "%s/%s/status",      _mqttBase, macstr);
+  sprintf(mqttChannel, "%s/%s/status", _mqttBase, macstr);
+  sprintf(mqttDebug,   "%s/%s/debug",  _mqttBase, macstr);
 
   Serial.begin(115200);
   delay(500);
@@ -176,16 +188,16 @@ void loop()
  // Try to reconnect to MQTT each time around the loop, in case we disconnect
   while (!client.connected())
   {
-    Serial.println("Connecting to MQTT Server " + String(mqttServer));
+    log_msg("Connecting to MQTT Server " + String(mqttServer));
 
     // Generate a random ID each time
     String clientId = "ESP8266Client-therm-";
     clientId += String(random(0xffff), HEX);
 
     if (client.connect(clientId.c_str())) {
-      Serial.println("MQTT connected.");
+      log_msg("MQTT connected.");
     } else {
-      Serial.println("failed with state " + client.state());
+      log_msg("failed with state " + client.state());
       delay(2000);
     }
   }
@@ -245,11 +257,7 @@ void loop()
         sprintf(cstr,"%.1f",celc/10.0);
         sprintf(fstr,"%.1f",celc*9/50.0+32);
 
-        Serial.print("OK ");
-        Serial.print(cstr);
-        Serial.print("C ");
-        Serial.print(fstr);
-        Serial.println("F");
+        log_msg("OK " + String(cstr) + "C " + String(fstr) + "F");
 
         // Let's build the JSON string.  This is a kludge
         time_t now = time(nullptr);
@@ -260,13 +268,12 @@ void loop()
       }
       else
       {
-        Serial.print("ERR out of bounds: ");
-        Serial.println(celc);
+        log_msg("ERR out of bounds: " + celc);
       }
     }
     else
     {
-      Serial.println("ERR Decoding error.");
+      log_msg("ERR Decoding error.");
     } 
 
     // delay for 1 second to avoid repetitions
