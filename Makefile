@@ -1,4 +1,6 @@
+ifndef PORT
 PORT=/dev/ttyUSB0
+endif
 BOARD=esp8266:esp8266:nodemcuv2
 
 SRC = $(wildcard *.ino)
