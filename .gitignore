@@ -1,5 +1,4 @@
-esp8266-temperature.esp8266.esp8266.nodemcuv2.bin
-esp8266-temperature.esp8266.esp8266.nodemcuv2.elf
 network_conn.h
+*.bin
+*.elf
 tst
-
