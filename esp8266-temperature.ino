@@ -11,6 +11,12 @@
 
 #define _mqttBase    "temp"
 
+// A change of greater than this won't be sent to MQTT because it's
+// likely to be a mis-measure.  This could delay sending changes
+// eg if one measure was bad then that measure and the next measure won't
+// be sent.  In 0.1C
+#define MAX_DELTA 30
+
 // For MQTT
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -183,8 +189,12 @@ void setup()
   attachInterrupt(digitalPinToInterrupt(DATAPIN), handler, CHANGE);
 }
 
+// Old temperature from previous loop
+long old_celc = 0;
+
 void loop()
 {
+
  // Try to reconnect to MQTT each time around the loop, in case we disconnect
   while (!client.connected())
   {
@@ -250,8 +260,8 @@ void loop()
         celc = temp -4096;
       }
 
-      // Some form of sanity check
-      if (celc > -200 && celc < 1000)
+      // If the change is too large then ignore it
+      if (abs(celc-old_celc) < MAX_DELTA)
       {
         char cstr[10],fstr[10];
         sprintf(cstr,"%.1f",celc/10.0);
@@ -268,8 +278,9 @@ void loop()
       }
       else
       {
-        log_msg("ERR out of bounds: " + celc);
+        log_msg(String("ERR out of bounds: new=") + celc + " old=" + old_celc);
       }
+      old_celc=celc;
     }
     else
     {
