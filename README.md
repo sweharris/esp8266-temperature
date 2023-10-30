@@ -38,7 +38,7 @@ The MQTT channels are based off the word "temp" and the last 6 digits of the MAC
 The format is JSON with "date", "degF" and "degC" entries
 eg
 
-    {"date":"Sun Dec  8 00:06:29 2019 GMT", "degF": "37.0", "degC": "2.8"}
+    {"date":"Sun Dec  8 00:06:29 2019 GMT", "epoch": 1575763589, "degF": "37.0", "degC": "2.8"}
 
 Uses PubSubClient library on top of the ESP8266WiFi one
    

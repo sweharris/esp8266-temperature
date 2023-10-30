@@ -273,7 +273,7 @@ void loop()
         time_t now = time(nullptr);
         String tm = ctime(&now);
         tm.trim();
-        String json="{\"date\":\"" + tm + " GMT\", \"degF\": \"" + fstr + "\", \"degC\": \"" + cstr + "\"}";
+        String json="{\"date\":\"" + tm + " GMT\", \"epoch\":" + now + ", \"degF\": \"" + fstr + "\", \"degC\": \"" + cstr + "\"}";
         client.publish(mqttChannel,json.c_str(),true);
       }
       else
